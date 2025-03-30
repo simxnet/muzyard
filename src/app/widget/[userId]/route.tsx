@@ -88,6 +88,8 @@ export async function GET(
 		)
 	).json();
 
+	console.log(lanyardUser);
+
 	if (!lanyardUser.success)
 		return Response.json({ error: true, message: "invalid user" });
 
