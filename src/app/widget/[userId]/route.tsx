@@ -76,7 +76,7 @@ export async function GET(
 
 	const lanyardUser: LanyardResponse = await (
 		await fetch(`https://api.lanyard.rest/v1/users/${userId}`, {
-			cache: "no-cache",
+			cache: "no-store",
 		})
 	).json();
 
