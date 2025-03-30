@@ -106,7 +106,7 @@ export async function GET(
 			<div tw="flex flex-row items-center">
 				<img
 					alt="ok"
-					src={spotify?.album_art_url ?? `url('${host}/broken.png')`}
+					src={spotify?.album_art_url ?? `${host}/broken.png`}
 					tw="w-44 h-44 rounded-2xl"
 				/>
 				<div tw="flex flex-col">
