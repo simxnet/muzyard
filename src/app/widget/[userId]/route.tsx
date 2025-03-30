@@ -149,6 +149,10 @@ export async function GET(
 		{
 			width: 900,
 			height: 350,
+			headers: {
+				"Cache-Control": "no-cache",
+				"x-vercel-cache": "max-age=0",
+			},
 		},
 	);
 }
