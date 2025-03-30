@@ -13,7 +13,12 @@ export default function Home() {
 			>
 				See on GitHub
 			</Link>
-			<p>See it in action:</p>
+			<p>
+				See it in action:{" "}
+				<Link className="underline italic" href="/widget/1076700780175831100">
+					https://muzyard.vercel.app/widget/1076700780175831100
+				</Link>
+			</p>
 			<img src="/widget/1076700780175831100" alt="simxnet spotify" />
 			<p>
 				there are more themes :P (currently <em>dark, light and catppuccin</em>)
