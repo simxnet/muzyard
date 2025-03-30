@@ -6,6 +6,8 @@ import type { NextRequest } from "next/server";
 
 // fuck cache.
 export const revalidate = 0;
+export const fetchCache = "force-no-store";
+// ts driving me insane.
 
 function songData(
 	start: number,
@@ -82,9 +84,7 @@ export async function GET(
 	const lanyardUser: LanyardResponse = await (
 		await fetch(
 			`https://api.lanyard.rest/v1/users/${userId}?tid=${timestamp}`,
-			{
-				cache: "no-store",
-			},
+			{ cache: "no-store", next: { revalidate: 0 } },
 		)
 	).json();
 
