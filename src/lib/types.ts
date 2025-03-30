@@ -5,6 +5,7 @@ export interface LanyardResponse {
 
 export interface Data {
 	spotify?: Spotify;
+	discord_user: DiscordUser;
 }
 
 export interface Spotify {
@@ -19,4 +20,14 @@ export interface Spotify {
 export interface Timestamps {
 	start: number;
 	end: number;
+}
+
+export interface DiscordUser {
+	id: string;
+	username: string;
+	avatar: string;
+	discriminator: string;
+	bot: boolean;
+	global_name: string;
+	display_name: string;
 }

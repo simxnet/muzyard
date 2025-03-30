@@ -90,6 +90,13 @@ const themes = {
 		sub: "#dcddde",
 		accent: "#7387cf",
 	},
+	transparent: {
+		bg: "transparent",
+		fg: "#ffffff",
+		bar: "#44475a",
+		sub: "#dcddde",
+		accent: "#22e888",
+	},
 };
 
 export async function GET(
@@ -98,6 +105,9 @@ export async function GET(
 ) {
 	const searchParams = req.nextUrl.searchParams;
 	const theme = (searchParams.get("theme") as keyof typeof themes) ?? "dark";
+	const blurbg = searchParams.has("blurbg");
+	const border = searchParams.has("border");
+	const showuser = searchParams.has("showuser");
 	const { userId } = await params;
 
 	// so if cache doesn't fucks me
@@ -115,6 +125,7 @@ export async function GET(
 		return Response.json({ error: true, message: "invalid user" });
 
 	const spotify = lanyardUser.data.spotify;
+	const user = lanyardUser.data.discord_user;
 
 	const { duration, progress, barWidth } = songData(
 		spotify?.timestamps.start ?? 0,
@@ -128,30 +139,81 @@ export async function GET(
 	return new ImageResponse(
 		<div
 			style={{
-				backgroundImage: `url('${host}/bg.png')`,
 				backgroundColor: currentTheme.bg,
 				color: currentTheme.fg,
 			}}
-			tw="w-full h-full rounded-2xl p-12 flex flex-col bg-contain bg-no-repeat"
+			tw="w-full h-full rounded-2xl p-12 flex flex-col"
 		>
-			<div tw="flex flex-row items-center">
-				<img
-					alt="ok"
-					src={spotify?.album_art_url ?? `${host}/broken.png`}
-					tw="w-44 h-44 rounded-2xl"
+			{blurbg && spotify && (
+				<div
+					style={{
+						backgroundImage: `url('${spotify.album_art_url}')`,
+						backgroundSize: "cover",
+						filter: "blur(20px)",
+					}}
+					tw="w-screen h-screen opacity-5 absolute"
 				/>
-				<div tw="flex flex-col">
-					<h1 tw="ml-5 font-black leading-none">
-						{spotify?.song ?? "Not listening to anything"}
-					</h1>
-					<p tw="flex ml-5" style={{ color: currentTheme.sub }}>
-						By {spotify?.artist ?? "Nobody"}
-					</p>
+			)}
+
+			{showuser && (
+				<div
+					style={{
+						display: "flex",
+						flexDirection: "row",
+						marginBottom: "20px",
+						gap: 12,
+						alignItems: "center",
+					}}
+				>
+					<img
+						src={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`}
+						width={50}
+						height={50}
+						alt={user.username}
+						style={{
+							borderRadius: "9999px",
+						}}
+					/>
+					<h3>{user.username}</h3>
 				</div>
+			)}
+			<div
+				className="w-full"
+				style={{ display: "flex", justifyContent: "space-between" }}
+			>
+				<div tw="flex flex-row items-center">
+					<img
+						style={{
+							border: border ? "1px solid" : "none",
+							borderColor: border ? currentTheme.accent : "transparent",
+						}}
+						alt="ok"
+						src={spotify?.album_art_url ?? `${host}/broken.png`}
+						tw="w-44 h-44 rounded-2xl"
+					/>
+					<div
+						style={{
+							display: "flex",
+							flexDirection: "column",
+							gap: -25,
+						}}
+					>
+						<h1 tw="ml-5 font-black leading-none">
+							{spotify?.song ?? "Not listening to anything"}
+						</h1>
+						<p tw="flex ml-5" style={{ color: currentTheme.sub }}>
+							In {spotify?.album ?? "Nowhere"}
+						</p>
+						<p tw="flex ml-5" style={{ color: currentTheme.sub }}>
+							By {spotify?.artist ?? "Nobody"}
+						</p>
+					</div>
+				</div>
+				<img alt="spotify" src={`${host}/spotify.png`} width={50} height={50} />
 			</div>
 			<div tw="relative flex mt-10">
 				<div
-					tw="w-full h-3 rounded-md"
+					tw="w-full h-5 rounded-md"
 					style={{ backgroundColor: currentTheme.bar }}
 				/>
 				<div
@@ -159,7 +221,7 @@ export async function GET(
 						width: `${barWidth}%`,
 						backgroundColor: currentTheme.accent,
 					}}
-					tw="h-3 rounded-md absolute"
+					tw="h-5 rounded-md absolute"
 				/>
 			</div>
 			<div tw="flex justify-between">
@@ -169,7 +231,7 @@ export async function GET(
 		</div>,
 		{
 			width: 900,
-			height: 350,
+			height: showuser ? 430 : 355,
 			headers: {
 				"Cache-Control": "no-cache",
 				"x-vercel-cache": "max-age=0",
