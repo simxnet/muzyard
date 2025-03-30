@@ -69,6 +69,27 @@ const themes = {
 		sub: "#b4baf3",
 		accent: "#7186fa",
 	},
+	oxocarbon: {
+		bg: "#161616",
+		fg: "#ffffff",
+		bar: "#535050",
+		sub: "#cfcfcf",
+		accent: "#c592ff",
+	},
+	molokai: {
+		bg: "#1b1d1e",
+		fg: "#f8f8f0",
+		bar: "#293739",
+		sub: "#eaebeb",
+		accent: "#f42670",
+	},
+	discord: {
+		bg: "#37393e",
+		fg: "#ffffff",
+		bar: "#44475a",
+		sub: "#dcddde",
+		accent: "#7387cf",
+	},
 };
 
 export async function GET(
