@@ -2,7 +2,10 @@ import type { LanyardResponse } from "@/lib/types";
 import { ImageResponse } from "next/og";
 import type { NextRequest } from "next/server";
 
-export const dynamic = "force-dynamic";
+// This code is so shit (i made it in 1h ig lol pls dont blame me)
+
+// fuck cache.
+export const revalidate = 0;
 
 function songData(
 	start: number,
@@ -74,10 +77,15 @@ export async function GET(
 	const theme = (searchParams.get("theme") as keyof typeof themes) ?? "dark";
 	const { userId } = await params;
 
+	// so if cache doesn't fucks me
+	const timestamp = Date.parse(new Date().toString());
 	const lanyardUser: LanyardResponse = await (
-		await fetch(`https://api.lanyard.rest/v1/users/${userId}`, {
-			cache: "no-store",
-		})
+		await fetch(
+			`https://api.lanyard.rest/v1/users/${userId}?tid=${timestamp}`,
+			{
+				cache: "no-store",
+			},
+		)
 	).json();
 
 	if (!lanyardUser.success)
