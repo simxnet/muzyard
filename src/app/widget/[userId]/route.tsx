@@ -75,7 +75,9 @@ export async function GET(
 	const { userId } = await params;
 
 	const lanyardUser: LanyardResponse = await (
-		await fetch(`https://api.lanyard.rest/v1/users/${userId}`)
+		await fetch(`https://api.lanyard.rest/v1/users/${userId}`, {
+			cache: "no-cache",
+		})
 	).json();
 
 	if (!lanyardUser.success)
