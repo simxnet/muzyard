@@ -1,4 +1,5 @@
 import type { LanyardResponse } from "@/lib/types";
+import { readFile } from 'fs/promises';
 import { ImageResponse } from "next/og";
 import type { NextRequest } from "next/server";
 
@@ -108,7 +109,15 @@ export async function GET(
 	const blurbg = searchParams.has("blurbg");
 	const border = searchParams.has("border");
 	const showuser = searchParams.has("showuser");
+	const font = searchParams.get("font");
 	const { userId } = await params;
+	let fontData: Buffer | null = null
+
+	try {
+		fontData = await readFile(`./public/${font}.ttf`)
+	} catch {
+		console.log('using fallback font')
+	}
 
 	// so if cache doesn't fucks me
 	const timestamp = Date.parse(new Date().toString());
@@ -118,8 +127,6 @@ export async function GET(
 			{ cache: "no-store", next: { revalidate: 0 } },
 		)
 	).json();
-
-	console.log(lanyardUser);
 
 	if (!lanyardUser.success)
 		return Response.json({ error: true, message: "invalid user" });
@@ -236,6 +243,12 @@ export async function GET(
 				"Cache-Control": "no-cache",
 				"x-vercel-cache": "max-age=0",
 			},
+			fonts: fontData ? [
+				{
+					name: "monocraft",
+					data: fontData,
+				}
+			] : undefined
 		},
 	);
 }
