@@ -111,11 +111,14 @@ export async function GET(
 	const showuser = searchParams.has("showuser");
 	const font = searchParams.get("font");
 	const { userId } = await params;
-	let fontData: Buffer | null = null
+	let fontData: ArrayBuffer | null = null
 
 	try {
-		fontData = await readFile(`./public/${font}.ttf`)
-	} catch {
+		if (font) {
+			fontData = await fetch(`https://github.com/simxnet/muzyard/blob/main/public/${font}.ttf?raw=true`).then(res => res.arrayBuffer());
+		}
+	} catch (e) {
+		console.log(e)
 		console.log('using fallback font')
 	}
 
